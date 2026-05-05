@@ -8,3 +8,4 @@ PROJE_FINAL_RAPOR_VERILERI/
 GELISMIS_RAPOR_GÖRSELLERI/
 static/uploads/*
 .DS_Store
+.idea/
