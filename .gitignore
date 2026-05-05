@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+archive/
+datasets/
+datasets_yeni/
+runs/
+PROJE_FINAL_RAPOR_VERILERI/
+GELISMIS_RAPOR_GÖRSELLERI/
+static/uploads/*
+.DS_Store

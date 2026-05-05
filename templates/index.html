@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Araç Tanıma Sistemi — Görüntü İşleme</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0a0b0e;
+            --surface: #111318;
+            --surface2: #181c24;
+            --border: rgba(255,255,255,0.07);
+            --border-active: rgba(99,179,237,0.5);
+            --accent: #63b3ed;
+            --accent2: #4fd1c5;
+            --text: #e8eaf0;
+            --muted: #6b7280;
+            --mono: 'Space Mono', monospace;
+            --sans: 'DM Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 48px 16px;
+            background-image:
+                radial-gradient(ellipse 60% 40% at 70% 10%, rgba(99,179,237,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 30% at 20% 80%, rgba(79,209,197,0.04) 0%, transparent 50%);
+        }
+
+        .panel {
+            width: 100%;
+            max-width: 640px;
+            animation: fadeUp 0.6s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Header ── */
+        .header {
+            margin-bottom: 36px;
+        }
+
+        .header-tag {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-tag::before {
+            content: '';
+            display: inline-block;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .header h1 {
+            font-family: var(--mono);
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: #fff;
+        }
+
+        .header h1 span {
+            color: var(--accent);
+        }
+
+        .header p {
+            margin-top: 8px;
+            font-size: 14px;
+            color: var(--muted);
+            font-weight: 300;
+        }
+
+        /* ── Card ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .card:hover {
+            border-color: rgba(255,255,255,0.12);
+        }
+
+        /* ── Section label ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 14px;
+        }
+
+        /* ── Model selector ── */
+        .model-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .model-option {
+            position: relative;
+        }
+
+        .model-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0; height: 0;
+        }
+
+        .model-option label {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 14px 16px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .model-option label:hover {
+            border-color: rgba(99,179,237,0.3);
+        }
+
+        .model-option input:checked + label {
+            border-color: var(--accent);
+            background: rgba(99,179,237,0.08);
+        }
+
+        .model-name {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .model-desc {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 300;
+        }
+
+        .model-badge {
+            display: inline-block;
+            margin-top: 4px;
+            font-size: 9px;
+            font-family: var(--mono);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 4px;
+            width: fit-content;
+        }
+
+        .badge-weak {
+            background: rgba(107,114,128,0.2);
+            color: var(--muted);
+        }
+
+        .badge-strong {
+            background: rgba(79,209,197,0.15);
+            color: var(--accent2);
+        }
+
+        /* ── Upload zone ── */
+        .upload-zone {
+            position: relative;
+        }
+
+        .upload-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .upload-inner {
+            border: 1.5px dashed rgba(255,255,255,0.12);
+            border-radius: 10px;
+            padding: 32px 20px;
+            text-align: center;
+            transition: border-color 0.2s, background 0.2s;
+            background: var(--surface2);
+        }
+
+        .upload-zone:hover .upload-inner {
+            border-color: rgba(99,179,237,0.4);
+            background: rgba(99,179,237,0.04);
+        }
+
+        .upload-zone.file-selected .upload-inner {
+            border-color: var(--accent2);
+            background: rgba(79,209,197,0.05);
+        }
+
+        .upload-icon {
+            margin-bottom: 10px;
+        }
+
+        .upload-icon svg {
+            stroke: var(--accent);
+            opacity: 0.7;
+        }
+
+        .upload-text {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .upload-text strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .upload-meta {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 4px;
+            font-family: var(--mono);
+        }
+
+        /* Anlık Önizleme Stili */
+        #instant-preview {
+            display: none;
+            width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        /* ── Submit button ── */
+        .btn-predict {
+            width: 100%;
+            padding: 15px;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s;
+        }
+
+        .btn-predict:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+        }
+
+        .btn-predict:active {
+            transform: translateY(0);
+        }
+
+        /* ── Result ── */
+        .result-card {
+            border: 1px solid rgba(99,179,237,0.3);
+            background: rgba(99,179,237,0.05);
+            animation: fadeUp 0.4s ease both;
+        }
+
+        .result-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .result-value {
+            font-family: var(--mono);
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* ── Preview image ── */
+        .preview-card {
+            animation: fadeUp 0.4s ease 0.1s both;
+        }
+
+        .preview-card img {
+            width: 100%;
+            border-radius: 10px;
+            display: block;
+        }
+
+        /* ── GEÇMİŞ (HISTORY) BÖLÜMÜ ── */
+        .history-section {
+            margin-top: 32px;
+            animation: fadeUp 0.8s ease both;
+        }
+
+        .history-grid {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) var(--surface);
+        }
+
+        .history-grid::-webkit-scrollbar { height: 4px; }
+        .history-grid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+        .history-item {
+            min-width: 130px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .history-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .history-item img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .history-label {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: var(--muted);
+            font-family: var(--mono);
+            margin-top: 28px;
+            letter-spacing: 0.06em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+
+    <div class="header">
+        <div class="header-tag">YOLOv8 · Stanford Cars Dataset</div>
+        <h1>ARAÇ<br><span>TANIMA_SİSTEMİ</span></h1>
+        <p>Karşılaştırmalı Model Analizi</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+
+        <div class="card">
+            <div class="section-label">Model Seçimi</div>
+            <div class="model-group">
+                <div class="model-option">
+                    <input type="radio" name="model_choice" id="v1" value="v1" {% if selected_model == 'v1' %}checked{% endif %}>
+                    <label for="v1">
+                        <span class="model-name">V1</span>
+                        <span class="model-desc">Temel model</span>
+                        <span class="model-badge badge-weak">Zayıf</span>
+                    </label>
+                </div>
+                <div class="model-option">
+                    <input type="radio" name="model_choice" id="v2" value="v2" {% if selected_model == 'v2' %}checked{% endif %}>
+                    <label for="v2">
+                        <span class="model-name">V2</span>
+                        <span class="model-desc">100 Epoch eğitim</span>
+                        <span class="model-badge badge-strong">Gelişmiş</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-label">Görüntü Yükle</div>
+            <div class="upload-zone" id="drop-zone">
+                <input type="file" name="file" id="file-input" accept="image/*">
+                <div class="upload-inner">
+                    <div class="upload-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                    <div class="upload-text" id="upload-status">
+                        <strong>Dosya seçmek için tıkla</strong> veya sürükle bırak
+                    </div>
+                    <div class="upload-meta">PNG · JPG · WEBP</div>
+                    <img id="instant-preview" src="#" alt="Önizleme">
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-predict">→ Tahmin Et</button>
+    </form>
+
+    {% if prediction %}
+    <div class="card result-card" style="margin-top: 20px;">
+        <div class="result-label">Tahmin Sonucu</div>
+        <div class="result-value">{{ prediction }}</div>
+    </div>
+    {% endif %}
+
+    {% if image_url %}
+    <div class="card preview-card" style="margin-top: 16px;">
+        <div class="section-label">İşlenen Görüntü</div>
+        <img src="{{ image_url }}" alt="Yüklenen araç görseli">
+    </div>
+    {% endif %}
+
+    {% if history %}
+    <div class="history-section">
+        <div class="section-label">Son Analizler (Geçmiş)</div>
+        <div class="history-grid">
+            {% for item in history %}
+            <div class="history-item">
+                <img src="{{ item.image }}" alt="Geçmiş Analiz">
+                <div class="history-label">{{ item.label }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="footer">AraçTanımaAI · Görüntü İşleme · v1 & v2</div>
+</div>
+
+<script>
+    const fileInput = document.getElementById('file-input');
+    const uploadStatus = document.getElementById('upload-status');
+    const dropZone = document.getElementById('drop-zone');
+    const preview = document.getElementById('instant-preview');
+
+    fileInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+
+            // Metni güncelle
+            uploadStatus.innerHTML = `<strong>${file.name}</strong> seçildi.`;
+            dropZone.classList.add('file-selected');
+
+            // Önizlemeyi göster
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
+</body>
+</html>
