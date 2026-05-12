@@ -70,7 +70,7 @@ git clone [https://github.com/yigi-t/Arac-Tanima-Sistemi.git](https://github.com
 cd Arac-Tanima-Sistemi
 ```
 
----
+
 ### 2. Sanal Ortam Oluşturun (Önerilir)
 ```bash
 # macOS/Linux
@@ -81,18 +81,20 @@ source venv/bin/activate
 python -m venv venv
 venv\Scripts\activate
 ```
----
+
 ### 3. Bağımlılıkları Yükleyin
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
----
+
 ### 4. Uygulamayı Başlatın
 ```bash
 python app.py
 ```
 Uygulama hazır olduğunda tarayıcınızdan http://127.0.0.1:5000 adresine erişebilirsiniz.
+
+---
 
 ## 📂 Proje Dosya Yapısı
 ```bash
@@ -113,6 +115,8 @@ Arac-Tanima-Sistemi/
 ├── 📄 requirements.txt      # Gerekli tüm kütüphane ve bağımlılık listesi
 └── 📄 README.md             # Proje detaylı dökümantasyonu
 ```
+
+---
 
 ## 👨‍💻 Hazırlayanlar
 
