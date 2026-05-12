@@ -20,6 +20,8 @@ Projenin temel amacı, araçların görsel verilerinden faydalanarak marka ve mo
 * **Veri Hacmi:** Veri seti, toplam 16.185 adet yüksek kaliteli araç görüntüsünden oluşmaktadır.
 * **Akademik Temel:** Veri seti hazırlığında Krause ve ekibinin (2013) 3D nesne temsili çalışmaları baz alınmıştır.
 
+Kullanılan Veri Seti: https://www.kaggle.com/datasets/eduardo4jesus/stanford-cars-dataset
+
 ---
 
 ## 🛠️ Kullanılan Teknolojiler ve Kütüphaneler
