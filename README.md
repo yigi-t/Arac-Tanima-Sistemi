@@ -119,7 +119,27 @@ Arac-Tanima-Sistemi/
 ```
 
 ---
+## 🖥️ Web Arayüzü ve Kullanım Deneyimi
 
+Sistem, kullanıcıların modelin başarısını interaktif bir şekilde deneyimleyebilmesi için Flask tabanlı bir web kontrol paneli ile sunulmaktadır. Bu panel üzerinden kullanıcılar, ham ve optimize edilmiş modeller arasında seçim yaparak aralarındaki performans farkını anlık olarak gözlemleyebilirler.
+
+### Arayüz Özellikleri:
+* **Dinamik Model Seçimi:** Kullanıcılar, V1 (Baseline) ve V2 (Optimize) modelleri arasında geçiş yaparak ablasyon analizi yapabilirler.
+* **Görsel Analiz Paneli:** Yüklenen araç görselleri üzerinde sınırlayıcı kutuların (bounding box) ve sınıf etiketlerinin (Dodge Dakota, Audi S4 vb.) anlık gösterimi.
+* **Yüksek Hızlı Çıkarım:** Uygulama, donanımsal ivmelendirme sayesinde 25.3 ms gibi düşük bir gecikme süresiyle sonuçları ekrana yansıtmaktadır.
+
+### Arayüz Görünümü:
+
+<img width="1512" height="982" alt="Web_Arayuz_1" src="https://github.com/user-attachments/assets/2dcecdf5-cec0-4e3c-b792-5b9a648745ae" />
+
+<img width="1512" height="982" alt="Web_Arayuz_2" src="https://github.com/user-attachments/assets/74d50755-9fa4-4363-881c-77d9e93eaec3" />
+
+
+> **Not:** Görseldeki analizler, modelin 100 (96 epoch'luk erken durdurma) eğitimi sonucunda elde edilen %94.9 mAP50 doğruluğunu ve hassas lokalizasyon yeteneğini yansıtmaktadır.
+
+
+
+---
 ## 👨‍💻 Hazırlayanlar
 
 * Yiğit Taş
