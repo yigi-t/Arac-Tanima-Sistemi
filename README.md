@@ -5,7 +5,7 @@
 ![Framework](https://img.shields.io/badge/Framework-Flask-orange)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-Bu proje, **YOLOv8** mimarisi kullanılarak geliştirilmiş, web tabanlı bir araç tanıma ve sınıflandırma sistemidir[cite: 1, 29]. [cite_start]Stanford Cars veri seti üzerinde eğitilen model, araçları sadece nesne olarak tespit etmekle kalmaz; marka, model ve üretim yılına kadar **ince taneli (fine-grained)** sınıflandırma yapabilmektedir.
+Bu proje, **YOLOv8** mimarisi kullanılarak geliştirilmiş, web tabanlı bir araç tanıma ve sınıflandırma sistemidir. Stanford Cars veri seti üzerinde eğitilen model, araçları sadece nesne olarak tespit etmekle kalmaz; marka, model ve üretim yılına kadar **ince taneli (fine-grained)** sınıflandırma yapabilmektedir.
 
 ---
 
@@ -105,15 +105,15 @@ Arac-Tanima-Sistemi/
 │   ├── 📂 css/              # Stil dosyaları (style.css)
 │   ├── 📂 js/               # Dinamik etkileşimler için JavaScript
 │   ├── 📂 uploads/          # Kullanıcı tarafından yüklenen test resimleri
-│   └── 📂 results/          # Aktivasyon haritası (Feature Extraction) çıktıları [cite: 59]
+│   └── 📂 results/          # Aktivasyon haritası (Feature Extraction) çıktıları
 ├── 📂 templates/            # Flask HTML şablonları 
-│   ├── 📄 index.html        # Ana yükleme ve seçim ekranı [cite: 385]
-│   └── 📄 result.html       # Analiz ve tahmin sonuç ekranı [cite: 399]
-├── 📂 runs/                 # YOLOv8 eğitim ve test çıktıları [cite: 35]
+│   ├── 📄 index.html        # Ana yükleme ve seçim ekranı
+│   └── 📄 result.html       # Analiz ve tahmin sonuç ekranı
+├── 📂 runs/                 # YOLOv8 eğitim ve test çıktıları
 │   └── 📂 detect/           
-│       └── 📂 train/        # Model ağırlıkları (best.pt) ve performans grafikleri [cite: 64, 382]
-├── 📄 app.py                # Sunucu yönetimi ve Flask API ana giriş dosyası 
-├── 📄 train.py              # Model eğitimi ve hiperparametre optimizasyonu [cite: 61]
+│       └── 📂 train/        # Model ağırlıkları (best.pt) ve performans grafikleri
+├── 📄 app.py                # Sunucu yönetimi ve Flask API ana giriş dosyası
+├── 📄 train.py              # Model eğitimi ve hiperparametre optimizasyonu
 ├── 📄 requirements.txt      # Gerekli tüm kütüphane ve bağımlılık listesi
 └── 📄 README.md             # Proje detaylı dökümantasyonu
 ```
