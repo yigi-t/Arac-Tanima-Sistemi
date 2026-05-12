@@ -3,78 +3,95 @@
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![YOLOv8](https://img.shields.io/badge/Model-YOLOv8n-green)
 ![Framework](https://img.shields.io/badge/Framework-Flask-orange)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-[cite_start]Bu proje, derin öğrenme yöntemlerini kullanarak araçların görsel verilerinden marka ve model kategorilerini otomatik olarak tahmin eden yüksek performanslı bir sistemdir[cite: 6]. [cite_start]Proje, sadece nesne tespiti yapmakla kalmayıp, birbirine görsel olarak çok benzeyen sınıflar arasındaki küçük farkların ayırt edilmesini hedefleyen **İnce Taneli Nesne Tanıma (Fine-grained Object Recognition)** problemine odaklanmaktadır[cite: 19, 20].
-
----
-
-## 🎯 Projenin Amacı
-
-[cite_start]Projenin temel amacı, bilgisayarlı görü tekniklerini kullanarak yüksek doğruluk oranına sahip bir araç sınıflandırma altyapısı kurmaktır[cite: 6]. [cite_start]Sistem, karmaşık görsel verileri analiz ederek araçların karakteristik tasarım detaylarını (ızgara yapısı, far geometrisi vb.) birer "dijital parmak izi" olarak işler[cite: 46, 49].
-
-## 📊 Veri Seti (Stanford Cars Dataset)
-
-[cite_start]Çalışmada, akademik alanda popülerliği kabul görmüş **Stanford Cars** veri seti kullanılmıştır[cite: 14, 15].
-* [cite_start]**Kapsam:** Toplamda 196 farklı araç marka ve modeli sisteme dahil edilmiştir[cite: 16].
-* [cite_start]**Veri Miktarı:** Veri seti, 16.185 adet yüksek kaliteli araç görüntüsünden oluşmaktadır[cite: 17, 18].
-* **Akademik Referans:** Krause, J., Stark, M., Deng, J., & Fei-Fei, L. (2013) çalışması temel alınmıştır.
+Bu proje, **YOLOv8** mimarisi kullanılarak geliştirilmiş, web tabanlı bir araç tanıma ve sınıflandırma sistemidir[cite: 1, 29]. [cite_start]Stanford Cars veri seti üzerinde eğitilen model, araçları sadece nesne olarak tespit etmekle kalmaz; marka, model ve üretim yılına kadar **ince taneli (fine-grained)** sınıflandırma yapabilmektedir.
 
 ---
 
-## 🔬 Teknik Metodoloji ve Mimari
+## 🎯 Projenin Amacı ve Kapsamı
 
-[cite_start]Sistem, nesne tespiti dünyasının güncel ve optimize edilmiş algoritmaları üzerine inşa edilmiştir[cite: 22, 26].
+Projenin temel amacı, araçların görsel verilerinden faydalanarak marka ve model kategorilerini otomatik olarak tahmin eden yüksek performanslı bir sistem geliştirmektir. Bilgisayarlı görü (computer vision) alanının en zorlu problemlerinden biri olan **İnce Taneli Nesne Tanıma**, birbirine görsel olarak çok benzeyen sınıflar arasındaki mikroskobik farkların ayırt edilmesini hedefler.
 
-### 1. Model Mimarisi
-* [cite_start]**YOLOv8 Nano (YOLOv8n):** Hafif ve hızlı bir mimari tercih edilerek uç birimlerde (Edge AI) çalışma potansiyeli korunmuştur[cite: 29].
-* [cite_start]**Derin Evrişimli Sinir Ağları (CNN):** Görsel öznitelikleri hiyerarşik bir yapıda çıkarmak için kullanılmıştır[cite: 30, 31].
-* [cite_start]**Anchor-Free (Çapasız) Tespit:** Nesne sınırlarını daha esnek ve hassas belirlemek için uygulanmıştır[cite: 31].
+## 📊 Veri Seti Özellikleri (Stanford Cars Dataset)
 
-### 2. Öznitelik Çıkarımı (Feature Extraction) Analizi
-[cite_start]Projenin en güçlü yönlerinden biri, modelin kararlarını şeffaflaştıran `visualize=True` metodolojisidir[cite: 37].
-* [cite_start]**Stage 0 & 1:** Modelin en sığ katmanlarında kenar ve doku tespiti (Edge & Texture Detection) gerçekleştirilir[cite: 51, 52, 53].
-* [cite_start]**Stage 21 (C2f):** Derin katmanlarda semantik derinlik ve tasarım dili analizi yapılarak marka/model özgü detaylara odaklanılır[cite: 55, 57].
+Çalışmada, bilgisayarlı görü alanında popüler bir referans olan **Stanford Cars** veri seti kullanılmıştır:
+* **Sınıf Çeşitliliği:** Toplamda 196 farklı araç marka ve modeli sisteme dahil edilmiştir.
+* **Veri Hacmi:** Veri seti, toplam 16.185 adet yüksek kaliteli araç görüntüsünden oluşmaktadır.
+* **Akademik Temel:** Veri seti hazırlığında Krause ve ekibinin (2013) 3D nesne temsili çalışmaları baz alınmıştır.
+
+---
+
+## 🛠️ Kullanılan Teknolojiler ve Kütüphaneler
+
+Yüksek performanslı nesne tespiti ve sınıflandırma hedeflerine ulaşmak için optimize edilmiş kütüphaneler kullanılmıştır:
+
+| Kütüphane / Framework | Kullanım Amacı |
+| :--- | :--- |
+| **Ultralytics YOLO** | Nesne tespiti ve model yönetimi. |
+| **PyTorch** | Modelin derin öğrenme altyapısı ve tensör işlemleri. |
+| **Flask** | Web sunucusu, API yönetimi ve arayüz entegrasyonu. |
+| **OpenCV** | Görüntü işleme operasyonları ve görselleştirme. |
+| **NumPy & Pandas** | Veri manipülasyonu ve matris işlemleri. |
+| **Matplotlib** | Performans grafiklerinin ve eğitim verilerinin görselleştirilmesi. |
+
+---
+
+## 🔬 Teknik Metodoloji ve Analiz
+
+### 1. Hiyerarşik Öznitelik Çıkarımı (Feature Extraction)
+Proje kapsamında modelin karar verme süreci `visualize=True` metodolojisi ile şeffaflaştırılmıştır:
+* **Kenar ve Doku Tespiti (Stage 0-1):** Modelin ilk katmanlarında görsel iskelet, kenarlar ve kontrast farkları saptanır.
+* **Semantik Derinlik (Stage 21):** Derin katmanlarda araçların marka ve modeline özgü karakteristik tasarım dillerine odaklanılır.
+
+### 2. Karşılaştırmalı Model Analizi (Ablasyon Çalışması)
+Eğitimin etkisini gözlemlemek adına iki farklı model yapısı kurgulanmıştır:
+* **V1 Modeli:** 20 epoch'luk başlangıç eğitimi; genel kategorizasyonda başarılı ancak detaylarda zayıf.
+* **V2 Modeli:** 100 epoch'luk (96'da durdurulmuş) optimize eğitim; ince taneli detaylarda yüksek başarı.
 
 ---
 
 ## 📈 Performans Sonuçları ve Başarı Metrikleri
 
-[cite_start]Modelin başarısı, hem eğitim (train) hem de doğrulama (validation) süreçlerinde titizlikle ölçülmüştür[cite: 64].
-
-* [cite_start]**mAP50 Skoru (%94.9):** Nesne bulma ve genel kategorizasyondaki yüksek başarıyı temsil eder[cite: 97, 118].
-* [cite_start]**mAP50-95 Skoru (%90.1):** Sınırlayıcı kutuların araç üzerine milimetrik hassasiyetle oturduğunu kanıtlayan en zorlu başarı kriteridir[cite: 119, 136, 173].
-* [cite_start]**F1-Confidence Dengesi:** Model, 0.547 güven eşiğinde (confidence) 0.86 F1 skoru ile en kararlı çalışma noktasına ulaşmıştır[cite: 221, 225].
-* [cite_start]**Eğitim Stratejisi:** Model 100 epoch hedeflenmiş, ancak overfitting riskine karşı 96. epoch'ta "erken durdurma" (early stopping) ile en iyi ağırlıklar (best.pt) kaydedilmiştir[cite: 229, 382].
+Modelimiz, derinlemesine yapılan testler sonucunda şu değerlere ulaşmıştır:
+* **mAP50 Skoru (%94.9):** Nesne bulma ve genel sınıflandırmadaki yüksek doğruluğu temsil eder.
+* **mAP50-95 Skoru (%90.1):** Sınırlayıcı kutuların araç üzerine milimetrik hassasiyetle oturduğunu tesciller.
+* **F1-Confidence Dengesi:** Model, **0.547** güven eşiğinde **0.86** F1 skoru ile en kararlı çalışma noktasındadır.
 
 ---
 
-## 💻 Uygulama Arayüzü ve Kullanım
+## ⚙️ Kurulum ve Çalıştırma Talimatları (Terminal)
 
-[cite_start]Proje, Flask tabanlı interaktif bir web arayüzü üzerinden sunulmaktadır[cite: 38, 385, 395].
-* [cite_start]**V1 (20 Epoch):** Başlangıç aşamasındaki zayıf model analizi[cite: 227, 388, 390].
-* [cite_start]**V2 (100 Epoch):** Derinleştirilmiş eğitimle optimize edilen güçlü model analizi[cite: 229, 392, 393].
-* [cite_start]**Kullanım:** Kullanıcı dostu arayüz üzerinden sürükle-bırak yöntemiyle resim yüklenip "Tahmin Et" butonuyla anlık analiz sonuçlarına ulaşılabilir[cite: 396, 399].
+Sistemi yerel makinenizde ayağa kaldırmak için aşağıdaki adımları takip ediniz:
 
----
-
-## 🛠️ Kullanılan Teknolojiler
-
-| Kütüphane / Framework | Kullanım Amacı |
-| :--- | :--- |
-| **Ultralytics YOLO** | [cite_start]Nesne tespiti ve model yönetimi [cite: 35] |
-| **PyTorch** | [cite_start]Derin öğrenme altyapısı [cite: 36] |
-| **Flask** | [cite_start]Web sunucusu ve API yönetimi [cite: 38] |
-| **OpenCV** | [cite_start]Görüntü işleme operasyonları [cite: 39] |
-| **NumPy & Pandas** | [cite_start]Veri manipülasyonu ve matris işlemleri [cite: 40] |
-| **Matplotlib** | [cite_start]Performans grafiklerinin görselleştirilmesi [cite: 41] |
+### 1. Depoyu Klonlayın
+```bash
+git clone [https://github.com/yigi-t/Arac-Tanima-Sistemi.git](https://github.com/yigi-t/Arac-Tanima-Sistemi.git)
+cd Arac-Tanima-Sistemi
+```
 
 ---
+### 2. Sanal Ortam Oluşturun (Önerilir)
+```bash
+# macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
 
-## 🏢 Endüstriyel Uygulama Alanları
-
-Geliştirilen sistem şu alanlarda doğrudan entegrasyona uygundur:
-* [cite_start]**Akıllı Ulaşım:** Trafik güvenliği ve plaka/marka doğrulama sistemleri[cite: 11].
-* [cite_start]**Otopark Otomasyonu:** İki faktörlü doğrulama süreçleri[cite: 12].
-* [cite_start]**Lojistik:** Otomotiv üretim bantlarında kalite kontrol ve envanter yönetimi[cite: 13].
-
+# Windows
+python -m venv venv
+venv\Scripts\activate
+```
 ---
+### 3. Bağımlılıkları Yükleyin
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+---
+### 4. Uygulamayı Başlatın
+```bash
+python app.py
+```
+Uygulama hazır olduğunda tarayıcınızdan http://127.0.0.1:5000 adresine erişebilirsiniz.
+
+
