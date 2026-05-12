@@ -5,7 +5,6 @@ YOLOv8 mimarisi kullanılarak geliştirilmiş, web tabanlı bir araç tanıma si
 ## 🚀 Özellikler
 - **Model:** YOLOv8n (Nano) tabanlı özel eğitilmiş ağırlıklar (`best.pt`).
 - **Arayüz:** Flask tabanlı web uygulaması.
-- **Performans:** M4 Pro GPU (MPS) desteği ile hızlı çıkarım.
 - **Geçmiş:** Son yapılan 10 analizi hafızada tutma ve görüntüleme.
 
 ## 🛠️ Kullanılan Teknolojiler ve Kütüphaneler
