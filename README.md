@@ -94,4 +94,27 @@ python app.py
 ```
 Uygulama hazır olduğunda tarayıcınızdan http://127.0.0.1:5000 adresine erişebilirsiniz.
 
+## 📂 Proje Dosya Yapısı
+```bash
+Arac-Tanima-Sistemi/
+├── 📂 static/               # Arayüz ve görsel analiz dosyaları 
+│   ├── 📂 css/              # Stil dosyaları (style.css)
+│   ├── 📂 js/               # Dinamik etkileşimler için JavaScript
+│   ├── 📂 uploads/          # Kullanıcı tarafından yüklenen test resimleri
+│   └── 📂 results/          # Aktivasyon haritası (Feature Extraction) çıktıları [cite: 59]
+├── 📂 templates/            # Flask HTML şablonları 
+│   ├── 📄 index.html        # Ana yükleme ve seçim ekranı [cite: 385]
+│   └── 📄 result.html       # Analiz ve tahmin sonuç ekranı [cite: 399]
+├── 📂 runs/                 # YOLOv8 eğitim ve test çıktıları [cite: 35]
+│   └── 📂 detect/           
+│       └── 📂 train/        # Model ağırlıkları (best.pt) ve performans grafikleri [cite: 64, 382]
+├── 📄 app.py                # Sunucu yönetimi ve Flask API ana giriş dosyası 
+├── 📄 train.py              # Model eğitimi ve hiperparametre optimizasyonu [cite: 61]
+├── 📄 requirements.txt      # Gerekli tüm kütüphane ve bağımlılık listesi
+└── 📄 README.md             # Proje detaylı dökümantasyonu
+```
 
+## 👨‍💻 Hazırlayanlar
+
+* Yiğit Taş
+* Nisa Örnek
